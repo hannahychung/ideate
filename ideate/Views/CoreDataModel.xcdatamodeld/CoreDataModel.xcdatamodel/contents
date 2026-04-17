@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="24G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="IdeateUser" representedClassName="IdeateUser" syncable="YES" codeGenerationType="class">
+        <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
+        <relationship name="traits" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TraitEntity" inverseName="user" inverseEntity="TraitEntity"/>
+    </entity>
+    <entity name="TraitEntity" representedClassName=".TraitEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IdeateUser" inverseName="traits" inverseEntity="IdeateUser"/>
+    </entity>
+</model>
