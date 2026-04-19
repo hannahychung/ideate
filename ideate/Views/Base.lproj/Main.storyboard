@@ -298,6 +298,46 @@
             </objects>
             <point key="canvasLocation" x="752" y="858"/>
         </scene>
+        <!--Table View Controller-->
+        <scene sceneID="LiE-Rw-hlQ">
+            <objects>
+                <tableViewController id="qBY-Ax-Ygk" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="Wsh-h1-Eku">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="zNE-62-us0" customClass="ProjectsHomeTableViewCell" customModule="ideate" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="50" width="393" height="51"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zNE-62-us0" id="qbC-jU-hMU">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="51"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uy9-je-rPx">
+                                            <rect key="frame" x="51" y="15" width="300" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="projectNameLabel" destination="uy9-je-rPx" id="2xG-zD-9OY"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="qBY-Ax-Ygk" id="buH-LX-TJd"/>
+                            <outlet property="delegate" destination="qBY-Ax-Ygk" id="DQ1-Cs-eFR"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="boA-af-bvF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2823.6641221374043" y="800.70422535211276"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="Qe0-EX-vqz">
             <objects>
@@ -358,8 +398,15 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7x2-Q2-TcW">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="O6l-6J-WQq"/>
+                                </items>
+                            </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD3-fO-3y6">
-                                <rect key="frame" x="296" y="59" width="54" height="51"/>
+                                <rect key="frame" x="316" y="99" width="54" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="0.32408588440000002" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -370,13 +417,6 @@
                                     <action selector="projectsHomeButton:" destination="x2g-Bc-G9F" eventType="touchUpInside" id="rcS-f2-Cip"/>
                                 </connections>
                             </button>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7x2-Q2-TcW">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Title" id="O6l-6J-WQq"/>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1x3-VC-Wsa"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
