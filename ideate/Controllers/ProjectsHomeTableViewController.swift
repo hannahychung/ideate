@@ -10,6 +10,7 @@ import CoreData
 
 class ProjectsHomeTableViewController: UITableViewController {
 
+    var user: IdeateUser? = nil
     let context = persistentContainer.viewContext
     
     override func viewDidLoad() {
@@ -24,8 +25,11 @@ class ProjectsHomeTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return 0
+        if let user = user, let projectlist = user.projectlist, let projects = projectlist.projects{
+            return projects.count
+        } else {
+            return 0
+        }
     }
 
 }

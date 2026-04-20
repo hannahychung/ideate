@@ -3,6 +3,7 @@
     <entity name="IdeateUser" representedClassName="IdeateUser" syncable="YES" codeGenerationType="class">
         <attribute name="password" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
+        <relationship name="projectlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProjectList" inverseName="user" inverseEntity="ProjectList"/>
         <relationship name="traits" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TraitEntity" inverseName="user" inverseEntity="TraitEntity"/>
     </entity>
     <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
@@ -10,8 +11,8 @@
         <relationship name="projectlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProjectList" inverseName="projects" inverseEntity="ProjectList"/>
     </entity>
     <entity name="ProjectList" representedClassName="ProjectList" syncable="YES" codeGenerationType="class">
-        <attribute name="numProjects" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="projects" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Project" inverseName="projectlist" inverseEntity="Project"/>
+        <relationship name="projects" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Project" inverseName="projectlist" inverseEntity="Project"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IdeateUser" inverseName="projectlist" inverseEntity="IdeateUser"/>
     </entity>
     <entity name="TraitEntity" representedClassName=".TraitEntity" syncable="YES" codeGenerationType="class">
         <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
