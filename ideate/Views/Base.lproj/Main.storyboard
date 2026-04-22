@@ -298,16 +298,16 @@
             </objects>
             <point key="canvasLocation" x="752" y="858"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Projects Home Table View Controller-->
         <scene sceneID="LiE-Rw-hlQ">
             <objects>
-                <tableViewController id="qBY-Ax-Ygk" sceneMemberID="viewController">
+                <tableViewController id="qBY-Ax-Ygk" customClass="ProjectsHomeTableViewController" customModule="ideate" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="Wsh-h1-Eku">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="zNE-62-us0" customClass="ProjectsHomeTableViewCell" customModule="ideate" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProjectCell" id="zNE-62-us0" customClass="ProjectsHomeTableViewCell" customModule="ideate" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="393" height="51"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zNE-62-us0" id="qbC-jU-hMU">
@@ -333,6 +333,7 @@
                             <outlet property="delegate" destination="qBY-Ax-Ygk" id="DQ1-Cs-eFR"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="Jfr-Sw-6Zt"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="boA-af-bvF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -343,7 +344,7 @@
             <objects>
                 <viewController id="x2g-Bc-G9F" customClass="IDViewController" customModule="ideate" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y2w-eA-HTr">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="My ID" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZZe-3T-QAQ">
@@ -426,19 +427,19 @@
                         <outlet property="idPic" destination="6rJ-Ys-m3W" id="xDi-WZ-dAc"/>
                         <outlet property="myID" destination="ZZe-3T-QAQ" id="uN0-yW-hrb"/>
                         <outlet property="userDescription" destination="UjS-jn-g5t" id="TEs-UD-aLB"/>
-                        <segue destination="EhY-89-3BZ" kind="show" identifier="toProjectHome" id="qkl-Fb-IBf"/>
+                        <segue destination="qBY-Ax-Ygk" kind="show" identifier="toProjectsHomeTable" id="tLf-pV-Gbt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fHl-Yj-f9a" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1771.7557251908397" y="119.71830985915494"/>
+            <point key="canvasLocation" x="1790" y="96"/>
         </scene>
         <!--Project Home View Controller-->
         <scene sceneID="fnU-fn-wyC">
             <objects>
                 <viewController id="EhY-89-3BZ" customClass="ProjectHomeViewController" customModule="ideate" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XCt-XF-P5X">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Uf-Wa-U2G">
@@ -597,7 +598,6 @@
                         <outlet property="collectionView" destination="WPU-Xy-AYy" id="cgp-ao-nx7"/>
                         <outlet property="projectName" destination="OxG-Ow-0Gy" id="hCn-Uf-Hyj"/>
                         <outlet property="textField" destination="Ks4-uX-lF7" id="Cep-C2-ZAp"/>
-                        <segue destination="x2g-Bc-G9F" kind="show" identifier="toHomeSegue" id="DbV-hE-bSj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qcg-ho-EVI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -682,7 +682,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="DbV-hE-bSj"/>
+        <segue reference="ABW-o7-WEG"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrowshape.left.circle" catalog="system" width="128" height="123"/>

@@ -48,9 +48,7 @@ class NameInputViewController: UIViewController, UITextFieldDelegate{
         }
         
         print("fill in all fields")
-        
-        performSegue(withIdentifier: "toSurveySegue", sender: self)
-    }
+            }
     
     
     func verifyUser(username: String, password: String) -> Bool {

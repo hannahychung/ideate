@@ -133,12 +133,12 @@ class IDViewController: UIViewController {
 
     
     @IBAction func projectsHomeButton(_ sender: UIButton) {
-        performSegue(withIdentifier: "toProjectHome", sender: self)
+        performSegue(withIdentifier: "toProjectsHomeTable", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toProjectHome" {
-            let destinationVC = segue.destination as! ProjectHomeViewController
+        if segue.identifier == "toProjetoProjectsHomeTablectHome" {
+            let destinationVC = segue.destination as! ProjectsHomeTableViewController
             destinationVC.user = self.user!
             destinationVC.modalPresentationStyle = .fullScreen
         }
