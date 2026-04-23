@@ -137,9 +137,9 @@ class IDViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toProjetoProjectsHomeTablectHome" {
+        if segue.identifier == "toProjectsHomeTable" {
             let destinationVC = segue.destination as! ProjectsHomeTableViewController
-            destinationVC.user = self.user!
+            destinationVC.user = self.user
             destinationVC.modalPresentationStyle = .fullScreen
         }
     }

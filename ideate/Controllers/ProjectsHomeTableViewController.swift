@@ -17,13 +17,14 @@ class ProjectsHomeTableViewController: UITableViewController {
         super.viewDidLoad()
         addItemDidAdd(name: "testing")
         addItemDidAdd(name: "testing 2")
+        print("TEST: user is nil? \(user == nil)")
         //navigationItem.leftBarButtonItem = editButtonItem
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,18 +38,18 @@ class ProjectsHomeTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as! ProjectsHomeTableViewCell
         if let user = user, let projectlist = user.projectlist, let projects = projectlist.projects {
-            let project = projects.allObjects[indexPath.row] as! Project
+            let projectsArray = projects.allObjects as! [Project]
+            let project = projectsArray[indexPath.row]
             cell.projectNameLabel.text = project.name
         }
         return cell
     }
     
     func addItemDidAdd(name: String) {
-        var rowInx = 0
         if let user = user, let projectlist = user.projectlist, let projects = projectlist.projects{
-            rowInx = projects.count
             let project = Project(context: context)
             project.name = name
+            projectlist.addToProjects(project)
             do {
                 try context.save()
                 print("user saved")
@@ -56,8 +57,7 @@ class ProjectsHomeTableViewController: UITableViewController {
                 print("error: \(error)")
             }
         }
-        let indexPath = IndexPath(row: rowInx, section: 0)
-        tableView.insertRows(at: [indexPath], with: .automatic) //insert into view
+        tableView.reloadData() //reload view
     }
 }
 

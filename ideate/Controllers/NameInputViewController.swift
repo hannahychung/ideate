@@ -36,39 +36,44 @@ class NameInputViewController: UIViewController, UITextFieldDelegate{
     }
     
     @IBAction func submitButton(_ sender: UIButton) {
-        if usernameField.hasText && passwordField.hasText {
-            let user = usernameField.text
-            let pw = passwordField.text
-            if verifyUser(username: user!, password: pw!) {
-                performSegue(withIdentifier: "toIDVC", sender: self)
-            } else {
-                print("no such user")
+        guard let username = usernameField.text,
+                  let password = passwordField.text,
+                  !username.isEmpty,
+                  !password.isEmpty else {
+                print("fill in all fields")
                 return
             }
-        }
-        
-        print("fill in all fields")
+
+            if verifyUser(username: username, password: password) {
+                performSegue(withIdentifier: "toIDVC", sender: self)
+            } else {
+                print("invalid username or password")
             }
+        }
     
     
     func verifyUser(username: String, password: String) -> Bool {
         let request: NSFetchRequest<IdeateUser> = IdeateUser.fetchRequest()
-        
-        request.predicate = NSPredicate(format: "username == %@", username)
-        
-        do {
-            let result = try context.fetch(request)
-            
-            guard let user = result.first else {
-                return false
-            }
-            
-            return user.password == password
-            
-        } catch {
-            print("error: \(error)")
-            return false
-        }
+           request.predicate = NSPredicate(format: "username == %@", username)
+           
+           do {
+               let result = try context.fetch(request)
+               
+               guard let user = result.first else {
+                   return false
+               }
+               
+               if user.password == password {
+                   currentUser = user
+                   return true
+               } else {
+                   return false
+               }
+               
+           } catch {
+               print("error: \(error)")
+               return false
+           }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
