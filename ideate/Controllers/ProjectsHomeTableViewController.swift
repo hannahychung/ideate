@@ -18,7 +18,7 @@ class ProjectsHomeTableViewController: UITableViewController {
         addItemDidAdd(name: "testing")
         addItemDidAdd(name: "testing 2")
         print("TEST: user is nil? \(user == nil)")
-        //navigationItem.leftBarButtonItem = editButtonItem
+        navigationItem.leftBarButtonItem = editButtonItem
     }
 
     // MARK: - Table view data source
@@ -38,12 +38,9 @@ class ProjectsHomeTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as! ProjectsHomeTableViewCell
         if let user = user,
-           let projectlist = user.projectlist,
-           let projects = projectlist.projects {
+           let projectlist = user.projectlist{
 
-            let projectsArray = (projects.allObjects as! [Project]).sorted {
-                $0.name ?? "" < $1.name ?? ""
-            }
+            let projectsArray = returnSortedArray(list: projectlist)
 
             let project = projectsArray[indexPath.row]
             cell.projectNameLabel.text = project.name
@@ -70,11 +67,50 @@ class ProjectsHomeTableViewController: UITableViewController {
                 try context.save()
                 context.refresh(user, mergeChanges: true)
                 print("user saved")
-                print(projectlist.projects?.count)
             } catch {
                 print("error: \(error)")
             }
         }
         tableView.reloadData() //reload view
     }
+    
+    
+    @IBAction func addButton(_ sender: UIBarButtonItem) {
+        let popup = UIAlertController(title: "Make a new project", message: "Make a new project", preferredStyle: .alert)
+        popup.addTextField { textField in textField.placeholder = "Project name"}
+        popup.addAction(UIAlertAction(title: "submit", style: .default) { _ in
+            if let text = popup.textFields?.first?.text {
+                self.addItemDidAdd(name: text)}
+            })
+        present(popup, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if let user = user,
+           let projectlist = user.projectlist{
+            
+            let projectsArray = returnSortedArray(list: projectlist)
+            
+            let projectToDelete = projectsArray[indexPath.row]
+            projectlist.removeFromProjects(projectToDelete)
+            context.delete(projectToDelete)
+            do {
+                try context.save()
+            } catch {
+                print("error deleting project: \(error)")
+            }
+            
+            let indexPaths = [indexPath]
+            tableView.deleteRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
+    func returnSortedArray(list: ProjectList) -> [Project]{
+        let projectsArray = (list.projects!.allObjects as! [Project]).sorted {
+            $0.name ?? "" < $1.name ?? ""
+        }
+        return projectsArray
+    }
+    
 }

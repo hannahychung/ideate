@@ -22,6 +22,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         usernameField.delegate = self
         passwordField.delegate = self
+        passwordField.isSecureTextEntry = true
+
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
