@@ -8,11 +8,13 @@
 
 import UIKit
 import UnsplashPhotoPicker
+import CoreData
 
-class ProjectHomeViewController: UIViewController, UITextFieldDelegate, UnsplashPhotoPickerDelegate {
+class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhotoPickerDelegate {
     
-    
+    let context = persistentContainer.viewContext
     var user: IdeateUser? = nil
+    var project: Project? = nil
 
     @IBOutlet weak var projectName: UILabel!
     @IBOutlet weak var textField: UITextField!
@@ -71,6 +73,9 @@ class ProjectHomeViewController: UIViewController, UITextFieldDelegate, Unsplash
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        if let project = project {
+            projectName.text = project.name
+        }
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
             layout.itemSize = CGSize(
@@ -165,12 +170,12 @@ class ProjectHomeViewController: UIViewController, UITextFieldDelegate, Unsplash
 
 }
 
-extension ProjectHomeViewController: UICollectionViewDelegate {
+extension ProjectViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
-extension ProjectHomeViewController: UICollectionViewDataSource {
+extension ProjectViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return data.count
     }

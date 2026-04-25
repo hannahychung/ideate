@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 class ProjectsHomeTableViewController: UITableViewController {
-
+    
     var user: IdeateUser? = nil
     let context = persistentContainer.viewContext
     
@@ -20,46 +20,19 @@ class ProjectsHomeTableViewController: UITableViewController {
         print("TEST: user is nil? \(user == nil)")
         navigationItem.leftBarButtonItem = editButtonItem
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let user = user, let projectlist = user.projectlist, let projects = projectlist.projects{
-            return projects.count
-        } else {
-            return 0
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as! ProjectsHomeTableViewCell
-        if let user = user,
-           let projectlist = user.projectlist{
-
-            let projectsArray = returnSortedArray(list: projectlist)
-
-            let project = projectsArray[indexPath.row]
-            cell.projectNameLabel.text = project.name
-        }
-        return cell
-    }
     
     func addItemDidAdd(name: String) {
         if let user = user {
             let projectlist: ProjectList
-                if let existing = user.projectlist {
-                    projectlist = existing
-                } else {
-                    let newList = ProjectList(context: context)
-                    user.projectlist = newList
-                    newList.user = user
-                    projectlist = newList
-                    print("created new projectlist")
-                }
+            if let existing = user.projectlist {
+                projectlist = existing
+            } else {
+                let newList = ProjectList(context: context)
+                user.projectlist = newList
+                newList.user = user
+                projectlist = newList
+                print("created new projectlist")
+            }
             let project = Project(context: context)
             project.name = name
             projectlist.addToProjects(project)
@@ -74,15 +47,38 @@ class ProjectsHomeTableViewController: UITableViewController {
         tableView.reloadData() //reload view
     }
     
+    func returnSortedArray(list: ProjectList) -> [Project]{
+        let projectsArray = (list.projects!.allObjects as! [Project]).sorted {
+            $0.name ?? "" < $1.name ?? ""
+        }
+        return projectsArray
+    }
     
-    @IBAction func addButton(_ sender: UIBarButtonItem) {
-        let popup = UIAlertController(title: "Make a new project", message: "Make a new project", preferredStyle: .alert)
-        popup.addTextField { textField in textField.placeholder = "Project name"}
-        popup.addAction(UIAlertAction(title: "submit", style: .default) { _ in
-            if let text = popup.textFields?.first?.text {
-                self.addItemDidAdd(name: text)}
-            })
-        present(popup, animated: true)
+    // MARK: - Table view data source
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let user = user, let projectlist = user.projectlist, let projects = projectlist.projects{
+            return projects.count
+        } else {
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as! ProjectsHomeTableViewCell
+        if let user = user,
+           let projectlist = user.projectlist{
+            
+            let projectsArray = returnSortedArray(list: projectlist)
+            
+            let project = projectsArray[indexPath.row]
+            cell.projectNameLabel.text = project.name
+        }
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -106,11 +102,36 @@ class ProjectsHomeTableViewController: UITableViewController {
         }
     }
     
-    func returnSortedArray(list: ProjectList) -> [Project]{
-        let projectsArray = (list.projects!.allObjects as! [Project]).sorted {
-            $0.name ?? "" < $1.name ?? ""
-        }
-        return projectsArray
+    @IBAction func addButton(_ sender: UIBarButtonItem) {
+        let popup = UIAlertController(title: "Make a new project", message: "Make a new project", preferredStyle: .alert)
+        popup.addTextField { textField in textField.placeholder = "Project name"}
+        popup.addAction(UIAlertAction(title: "submit", style: .default) { _ in
+            if let text = popup.textFields?.first?.text {
+                self.addItemDidAdd(name: text)}
+        })
+        present(popup, animated: true)
     }
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return !tableView.isEditing
+    }
+    
+    // MARK: Presenting individual projects
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toProjectSegue", sender: self)
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toProjectSegue" {
+            let targetVC = segue.destination as! ProjectViewController
+            if let user = user, let projectlist = user.projectlist, let project = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: project){
+                let projectsArray = returnSortedArray(list: projectlist)
+                let projectSelected = projectsArray[indexPath.row]
+                targetVC.project = projectSelected
+            }
+        }
+    }
 }

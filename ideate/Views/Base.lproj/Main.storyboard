@@ -340,10 +340,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="EhY-89-3BZ" kind="show" identifier="toProjectSegue" id="jy6-9f-qHe"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="boA-af-bvF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2746" y="808"/>
+            <point key="canvasLocation" x="2718" y="808"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Qe0-EX-vqz">
@@ -440,10 +443,10 @@
             </objects>
             <point key="canvasLocation" x="1790" y="96"/>
         </scene>
-        <!--Project Home View Controller-->
+        <!--Project View Controller-->
         <scene sceneID="fnU-fn-wyC">
             <objects>
-                <viewController id="EhY-89-3BZ" customClass="ProjectHomeViewController" customModule="ideate" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="EhY-89-3BZ" customClass="ProjectViewController" customModule="ideate" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XCt-XF-P5X">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -569,19 +572,6 @@
                                     <action selector="newCellButton:" destination="EhY-89-3BZ" eventType="touchUpInside" id="XEO-0t-Qrp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2NO-xb-qyU">
-                                <rect key="frame" x="311" y="59" width="54" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="0.32408588440000002" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="person.circle.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="homeButton:" destination="EhY-89-3BZ" eventType="touchUpInside" id="DbH-HT-DKT"/>
-                                    <action selector="nextPic:" destination="x2g-Bc-G9F" eventType="touchUpInside" id="dbW-4a-lVK"/>
-                                    <action selector="projectsHomeButton:" destination="x2g-Bc-G9F" eventType="touchUpInside" id="N2V-Va-Zwe"/>
-                                </connections>
-                            </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Rename Project" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ks4-uX-lF7">
                                 <rect key="frame" x="63" y="183" width="199" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -608,7 +598,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qcg-ho-EVI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2824" y="-24"/>
+            <point key="canvasLocation" x="3746" y="808"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="k3r-FI-jEi">
@@ -697,7 +687,6 @@
         <image name="id-01" width="2400" height="2400"/>
         <image name="id8-logo" width="6000" height="6000"/>
         <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="person.circle.fill" catalog="system" width="128" height="123"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="plus.capsule.fill" catalog="system" width="128" height="96"/>
         <systemColor name="systemBackgroundColor">
