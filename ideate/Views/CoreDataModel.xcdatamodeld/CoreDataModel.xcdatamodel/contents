@@ -28,11 +28,12 @@
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Project" inverseName="projectlist" inverseEntity="Project"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IdeateUser" inverseName="projectlist" inverseEntity="IdeateUser"/>
     </entity>
-    <entity name="Survey" representedClassName="Survey" syncable="YES" codeGenerationType="class">
+    <entity name="Survey" representedClassName=".Survey" syncable="YES" codeGenerationType="class">
         <attribute name="finished" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="questions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestion" inverseName="survey" inverseEntity="SurveyQuestion"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IdeateUser" inverseName="surveys" inverseEntity="IdeateUser"/>
+        <relationship name="userAnswers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyTrait" inverseName="survey" inverseEntity="SurveyTrait"/>
     </entity>
     <entity name="SurveyAnswer" representedClassName=".SurveyAnswer" syncable="YES" codeGenerationType="class">
         <attribute name="answer" optional="YES" attributeType="String"/>
@@ -48,6 +49,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="answer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyAnswer" inverseName="traits" inverseEntity="SurveyAnswer"/>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Survey" inverseName="userAnswers" inverseEntity="Survey"/>
     </entity>
     <entity name="TraitEntity" representedClassName=".TraitEntity" syncable="YES" codeGenerationType="class">
         <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>

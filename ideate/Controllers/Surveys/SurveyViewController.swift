@@ -42,11 +42,14 @@ class SurveyViewController: UIViewController {
 
                 backArrowButton.isHidden = (currentQuestion == 0)
                 nextArrowButton.isHidden = isLast
+            
+            loadQuestion()
         }
     }
                 
     override func viewDidLoad() {
         super.viewDidLoad()
+        user = SessionUser.shared.currentUser
         submitButton.isEnabled = false
         submitButton.isHidden = true
         loadSurvey()
@@ -56,8 +59,10 @@ class SurveyViewController: UIViewController {
     
     func loadSurvey() {
         guard let survey else { return }
-
-        questions = (survey.questions?.allObjects as? [SurveyQuestion]) ?? []
+        if let qs = survey.questions{
+            questions = qs.allObjects as! [SurveyQuestion]
+        }
+       
     }
     
     func loadQuestion() {
@@ -65,24 +70,32 @@ class SurveyViewController: UIViewController {
         guard !questions.isEmpty else { return }
 
         let question = questions[currentQuestion]
-        questionLabel.text = question.question
-        currentAnswers = (question.answers?.allObjects as? [SurveyAnswer]) ?? []
+        if let questionText = question.question {
+            questionLabel.text = questionText
+            print("QUESTION: \(questionText)")
+        } else {
+            print("no such question")
+        }
+        if let ans = question.answers {
+            currentAnswers = ans.allObjects as! [SurveyAnswer]
+        }
+       
         loadAnswers()
     }
     
     func loadAnswers() {
         for i in 0..<answerButtons.count {
-                   if i < currentAnswers.count {
-                       answerButtons[i].setTitle(currentAnswers[i].answer, for: .normal)
-                       answerButtons[i].isHidden = false
-                       answerButtons[i].isEnabled = true
-                       answerButtons[i].backgroundColor = .systemGray5
-                   } else {
-                       answerButtons[i].setTitle("", for: .normal)
-                       answerButtons[i].isHidden = true
-                       answerButtons[i].isEnabled = false
-                   }
-               }
+            if i < currentAnswers.count {
+                answerButtons[i].setTitle(currentAnswers[i].answer, for: .normal)
+                answerButtons[i].isHidden = false
+                answerButtons[i].isEnabled = true
+                answerButtons[i].backgroundColor = .systemGray5
+            } else {
+                answerButtons[i].setTitle("", for: .normal)
+                answerButtons[i].isHidden = true
+                answerButtons[i].isEnabled = false
+            }
+        }
     }
 
     @IBAction func nextArrow(_ sender: UIButton) {
@@ -93,18 +106,37 @@ class SurveyViewController: UIViewController {
     
     @IBAction func answerClicked(_ sender: UIButton) {
         let index = sender.tag
-                guard index < currentAnswers.count else { return }
+            guard index < currentAnswers.count else { return }
 
-                let selected = currentAnswers[index]
+            let selected = currentAnswers[index]
 
-                //add answer somewhere
+            guard let survey = survey else { return }
 
-                for i in 0..<answerButtons.count {
-                    answerButtons[i].backgroundColor =
-                        (i == index) ? .systemGray3 : .systemGray5
+            if let allAnswers = currentAnswers as [SurveyAnswer]? {
+                for ans in allAnswers {
+                    if let traits = ans.traits {
+                        for t in traits {
+                            let t = t as! SurveyTrait
+                            survey.removeFromUserAnswers(t)
+                        }
+                    }
+                }
             }
-        guard currentQuestion < questions.count - 1 else { return }
-              currentQuestion += 1
+
+            if let traits = selected.traits {
+                for t in traits {
+                    let t = t as! SurveyTrait
+                    survey.addToUserAnswers(t)
+                }
+            }
+
+            for i in 0..<answerButtons.count {
+                answerButtons[i].backgroundColor =
+                    (i == index) ? .systemGray3 : .systemGray5
+            }
+
+            guard currentQuestion < questions.count - 1 else { return }
+            currentQuestion += 1
     }
     
     @IBAction func backArrow(_ sender: UIButton) {
@@ -113,24 +145,25 @@ class SurveyViewController: UIViewController {
     }
     
     @IBAction func submitButton(_ sender: UIButton) {
-        print("submit")
         guard let user = user else { return }
-        
-        //compile traits and save
-        
-//        for trait in traits {
-//            let temp = TraitEntity(context: user.managedObjectContext!)
-//            temp.type = trait.type
-//            temp.strength = Int16(trait.strength)
-//            temp.user = user
-//        }
+        print("submit")
+
+        if let survey = survey {
+            survey.finished = true
+        }
         
         try? user.managedObjectContext?.save()
         
-        SessionUser.shared.currentUser = user
-        
-        if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
-            sceneDelegate.switchToMainApp(user: user)
+        performSegue(withIdentifier: "toSurveyResultsSegue", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toSurveyResultsSegue" {
+            let targetVC = segue.destination as! SurveyResultsViewController
+            if let survey = survey, let answers = survey.userAnswers {
+                targetVC.answers = answers
+                targetVC.survey = survey
+            }
         }
     }
  
