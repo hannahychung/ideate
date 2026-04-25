@@ -11,18 +11,13 @@ class ImageCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     
-    func configure(url: String) {
-        if let imageURL = URL(string: url) {
-            // simplest version (not ideal but works)
-            DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: imageURL),
-                   let image = UIImage(data: data) {
-                    
-                    DispatchQueue.main.async {
-                        self.imageView.image = image
-                    }
-                }
+    func configure(url: URL) {
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard let data = data else { return }
+            DispatchQueue.main.async {
+                self.imageView.image = UIImage(data: data)
             }
-        }
+        }.resume()
+    
     }
 }

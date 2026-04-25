@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="24G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
-    <entity name="IdeateUser" representedClassName="IdeateUser" syncable="YES" codeGenerationType="class">
+    <entity name="IdeateUser" representedClassName=".IdeateUser" syncable="YES" codeGenerationType="class">
         <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="profile" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <relationship name="projectlist" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ProjectList" inverseName="user" inverseEntity="ProjectList"/>
         <relationship name="traits" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TraitEntity" inverseName="user" inverseEntity="TraitEntity"/>
     </entity>
     <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="cells" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectCell" inverseName="project" inverseEntity="ProjectCell"/>
         <relationship name="projectlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProjectList" inverseName="projects" inverseEntity="ProjectList"/>
+    </entity>
+    <entity name="ProjectCell" representedClassName=".ProjectCell" syncable="YES" codeGenerationType="class">
+        <attribute name="colorValue" optional="YES" attributeType="String"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="textValue" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="project" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Project" inverseName="cells" inverseEntity="Project"/>
     </entity>
     <entity name="ProjectList" representedClassName="ProjectList" syncable="YES" codeGenerationType="class">
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Project" inverseName="projectlist" inverseEntity="Project"/>

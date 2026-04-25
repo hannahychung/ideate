@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class IDViewController: UIViewController {
     
@@ -15,7 +16,9 @@ class IDViewController: UIViewController {
     
     @IBOutlet weak var userDescription: UILabel!
     
-    let pictures: [String] = ["id-01", "id-02", "id-02", "id-03", "id-04", "id-05"]
+    let context = persistentContainer.viewContext
+    
+    let pictures: [String] = ["id-01", "id-02", "id-03", "id-04", "id-05"]
                 
     var currentPicIndex = 0
         
@@ -41,17 +44,23 @@ class IDViewController: UIViewController {
                 myID.adjustsFontSizeToFitWidth = true
                 myID.text = "\(name ?? "[Default]")'s ID"
             }
+            
+            let savedIndex = Int(user.profile)
+            currentPicIndex = (0..<pictures.count).contains(savedIndex) ? savedIndex : 0
+            idPic.image = UIImage(named: pictures[currentPicIndex])
             userDescription.adjustsFontSizeToFitWidth = true
             userDescription.text = updateUserDesc()
         }
 
         @IBAction func nextPic(_ sender: UIButton) {
             currentPicIndex = currentPicIndex + 1
-            if currentPicIndex > 5 {
+            if currentPicIndex > 4 {
                 currentPicIndex = 0
             }
             
             idPic.image = UIImage(named: pictures[currentPicIndex])
+            user?.profile = Int16(currentPicIndex)
+            saveUser()
         }
         
         
@@ -59,18 +68,21 @@ class IDViewController: UIViewController {
             
             currentPicIndex = currentPicIndex - 1
             if currentPicIndex < 0 {
-                currentPicIndex = 5
+                currentPicIndex = 4
             }
-            
+            user?.profile = Int16(currentPicIndex)
+                saveUser()
             idPic.image = UIImage(named: pictures[currentPicIndex])
         }
         
         @IBAction func randomPic(_ sender: UIButton) {
             
-            currentPicIndex = Int.random(in: 0...5)
-            
+            currentPicIndex = Int.random(in: 0..<pictures.count)
+            user?.profile = Int16(currentPicIndex)
+                saveUser()
             idPic.image = UIImage(named: pictures[currentPicIndex])
         }
+    
     
     func updateUserDesc() -> String {
         guard let traits = user?.traits else {
@@ -136,6 +148,18 @@ class IDViewController: UIViewController {
        
         
         return "\(guideText) \(inspoText)"
+    }
+    
+    func saveUser() {
+        guard let user = user else { return }
+
+        do {
+            try context.save()
+            context.refresh(user, mergeChanges: true)
+            print("user saved")
+        } catch {
+            print("error saving user: \(error)")
+        }
     }
 
     

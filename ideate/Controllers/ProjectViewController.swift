@@ -10,7 +10,7 @@ import UIKit
 import UnsplashPhotoPicker
 import CoreData
 
-class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhotoPickerDelegate {
+class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhotoPickerDelegate,ColorCellDelegate {
     
     let context = persistentContainer.viewContext
     var user: IdeateUser? = nil
@@ -37,13 +37,8 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
         guard let photo = photos.first else { return }
         guard let url = photo.urls[.small] else { return }
         
-        let imageURL = url.absoluteString
-        
-        data.append(.image(url: imageURL))
-        
-        let newIndex = IndexPath(item: data.count - 1, section: 0)
-        collectionView.insertItems(at: [newIndex])
-        
+        insertImageCell(img: url)
+       
         photoPicker.dismiss(animated: true)
     }
     
@@ -65,7 +60,7 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
         case color(color: UIColor)
     }
     
-    var data: [CellType] = [.text(content: "this is some notes about a project that i'm working on."), .color(color: .systemBlue), .text(content: "here are some more notes about the same project.")]
+    var data: [ProjectCell] = []
     
     // MARK: View Setup
     
@@ -74,6 +69,7 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
         user = SessionUser.shared.currentUser
         collectionView.delegate = self
         collectionView.dataSource = self
+        
         if let project = project {
             projectName.text = project.name
         }
@@ -88,6 +84,23 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
         textField.delegate = self
     
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard let project = project else { return }
+
+        let request: NSFetchRequest<ProjectCell> = ProjectCell.fetchRequest()
+        request.predicate = NSPredicate(format: "project == %@", project)
+
+        do {
+            let results = try context.fetch(request)
+            data = results.sorted { $0.order < $1.order }
+            collectionView.reloadData()
+        } catch {
+            print("fetch error: \(error)")
+        }
     }
     
     @IBAction func homeButton(_ sender: UIButton) {
@@ -133,10 +146,18 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
             
             alert.addAction(UIAlertAction(title: "Add", style: .default) { _ in
                 let text = alert.textFields?.first?.text
-                    self.data.append(.text(content: text!))
-                    
-                    let newIndex = IndexPath(item: self.data.count - 1, section: 0)
-                    self.collectionView.insertItems(at: [newIndex])
+                guard let project = self.project else { return }
+
+                let cell = ProjectCell(context: self.context)
+                    cell.type = "text"
+                    cell.textValue = text
+                cell.order = Int16(self.data.count)
+                    cell.project = project
+
+                try? self.context.save()
+
+                self.data.append(cell)
+                self.collectionView.insertItems(at: [IndexPath(item: self.data.count - 1, section: 0)])
             })
                         
             present(alert, animated: true)
@@ -144,14 +165,48 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
     
     func addImageCell() {
         openPicker()
+        
+    }
+    
+    func insertImageCell(img: URL) {
+        guard let project = project else { return }
+
+           let cell = ProjectCell(context: context)
+        
+           cell.type = "image"
+        cell.imageURL = img.absoluteString
+           cell.order = Int16(data.count)
+           cell.project = project
+
+           try? context.save()
+           data.append(cell)
+        collectionView.insertItems(
+               at: [IndexPath(item: data.count - 1, section: 0)]
+           )
+        collectionView.reloadData()
 
     }
     
+    func colorCell(_ cell: ColorCell, didChange color: UIColor) {
+        let indexPath = collectionView.indexPath(for: cell)!
+        let model = data[indexPath.item]
+
+        model.colorValue = color.toHex()
+        try? context.save()
+    }
+    
     func addColorCell() {
-        data.append(.color(color: .systemGreen))
-        
-        let newIndex = IndexPath(item: data.count - 1, section: 0)
-        collectionView.insertItems(at: [newIndex])
+        guard let project = project else { return }
+            let cell = ProjectCell(context: context)
+            cell.type = "color"
+            cell.colorValue = "#00FF00"
+            cell.order = Int16(data.count)
+            cell.project = project
+
+            try? context.save()
+
+            data.append(cell)
+        collectionView.insertItems(at: [IndexPath(item: data.count - 1, section: 0)])
     }
     
     //MARK: Text Field
@@ -159,7 +214,9 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
     @IBAction func editName(_ sender: UIButton) {
         if textField.hasText {
             projectName.adjustsFontSizeToFitWidth = true
+            project!.name = textField.text
             projectName.text = textField.text!
+            try? context.save()
         }
     }
     
@@ -176,30 +233,76 @@ extension ProjectViewController: UICollectionViewDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
+
+
 extension ProjectViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         return data.count
     }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = data[indexPath.item]
-        
-        switch item {
-        case .text(let content):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: textCellIdentifier, for: indexPath) as! TextCell
-            cell.configure(text:content)
-            cell.layer.borderColor = UIColor.gray.cgColor
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        let cellObj = data[indexPath.item]
+
+        switch cellObj.type {
+
+        case "text":
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: textCellIdentifier,
+                for: indexPath
+            ) as! TextCell
+
+            cell.configure(text: cellObj.textValue ?? "")
             return cell
+
+        case "image":
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: imageCellIdentifier,
+                for: indexPath
+            ) as! ImageCell
+
+            if let urlString = cellObj.imageURL,
+               let url = URL(string: urlString) {
+                cell.configure(url: url)
+            }
+            return cell
+
+        case "color":
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: colorCellIdentifier,
+                for: indexPath
+            ) as! ColorCell
             
-        case .image(let url):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageCellIdentifier, for: indexPath) as! ImageCell
-            cell.configure(url: url)
-            cell.layer.borderColor = UIColor.gray.cgColor
+            cell.delegate = self
+
+            cell.configure(colorHex: cellObj.colorValue ?? "#FFFFFF")
             return cell
-        case .color(let color): let cell = collectionView.dequeueReusableCell(withReuseIdentifier: colorCellIdentifier, for: indexPath) as! ColorCell
-            cell.configure(color: color)
-            cell.layer.borderColor = UIColor.gray.cgColor
-            cell.layer.borderColor = UIColor.gray.cgColor
-            return cell
+
+        default:
+            fatalError("Unknown cell type")
         }
+    }
+}
+
+
+extension UIColor {
+
+    func toHex() -> String {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+
+        return String(
+            format: "#%02X%02X%02X",
+            Int(r * 255),
+            Int(g * 255),
+            Int(b * 255)
+        )
     }
 }

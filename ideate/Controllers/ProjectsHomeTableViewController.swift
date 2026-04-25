@@ -45,6 +45,11 @@ class ProjectsHomeTableViewController: UITableViewController {
         tableView.reloadData() //reload view
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     func returnSortedArray(list: ProjectList) -> [Project]{
         let projectsArray = (list.projects!.allObjects as! [Project]).sorted {
             $0.name ?? "" < $1.name ?? ""
