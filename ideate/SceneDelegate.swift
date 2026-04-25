@@ -47,6 +47,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
+    
+    func switchToMainApp(user: IdeateUser?) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let tabBarController = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as! UITabBarController
+
+        if let nav = tabBarController.viewControllers?.first as? UINavigationController,
+           let idVC = nav.viewControllers.first as? IDViewController {
+            
+            idVC.user = user
+        }
+
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+    }
 
 
 }

@@ -9,7 +9,6 @@ import UIKit
 import CoreData
 
 class SurveyViewController: UIViewController {
-
     
     @IBOutlet weak var progressBar: UIProgressView!
     
@@ -140,15 +139,11 @@ class SurveyViewController: UIViewController {
         //user.updateTraits(newTraits: survey.compileTraits())
 //        print("TEST: \(user?.username)")
 //        print(user?.userTraits)
-        performSegue(withIdentifier: "toIDSegue", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toIDSegue" {
-            let destinationVC = segue.destination as! IDViewController
-            destinationVC.user = self.user
-            destinationVC.modalPresentationStyle = .fullScreen
+        SessionUser.shared.currentUser = user
 
+        if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate {
+            sceneDelegate.switchToMainApp(user: user)
         }
     }
+ 
 }

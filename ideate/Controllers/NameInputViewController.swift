@@ -46,7 +46,13 @@ class NameInputViewController: UIViewController, UITextFieldDelegate{
             }
 
             if verifyUser(username: username, password: password) {
-                performSegue(withIdentifier: "toIDVC", sender: self)
+                
+                SessionUser.shared.currentUser = currentUser
+                
+                if let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate,
+                       let user = currentUser {
+                        sceneDelegate.switchToMainApp(user: user)
+                    }
             } else {
                 print("invalid username or password")
             }
@@ -75,15 +81,6 @@ class NameInputViewController: UIViewController, UITextFieldDelegate{
                print("error: \(error)")
                return false
            }
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toIDVC" {
-            let destinationVC = segue.destination as! IDViewController
-            destinationVC.user = self.currentUser
-            destinationVC.modalPresentationStyle = .fullScreen
-
-        }
     }
 
 }

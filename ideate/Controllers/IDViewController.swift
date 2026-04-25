@@ -20,19 +20,26 @@ class IDViewController: UIViewController {
     var currentPicIndex = 0
         
     var user: IdeateUser? = nil
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("survey user:", user?.username ?? "nil")
+    }
 
         override func viewDidLoad() {
             super.viewDidLoad()
             
             guard let user = user else {
                     return
-                }
+            }
+            
+            let name = user.username
             
             if user.username == "" {
                 myID.text = "Your ID"
             } else {
                 myID.adjustsFontSizeToFitWidth = true
-                //myID.text = "\(user.getUsername())'s ID"
+                myID.text = "\(name ?? "[Default]")'s ID"
             }
             userDescription.adjustsFontSizeToFitWidth = true
             userDescription.text = updateUserDesc()
@@ -131,17 +138,5 @@ class IDViewController: UIViewController {
         return "\(guideText) \(inspoText)"
     }
 
-    
-    @IBAction func projectsHomeButton(_ sender: UIButton) {
-        performSegue(withIdentifier: "toProjectsHomeTable", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "toProjectsHomeTable" {
-            let destinationVC = segue.destination as! ProjectsHomeTableViewController
-            destinationVC.user = self.user
-            destinationVC.modalPresentationStyle = .fullScreen
-        }
-    }
     
 }

@@ -10,14 +10,12 @@ import CoreData
 
 class ProjectsHomeTableViewController: UITableViewController {
     
-    var user: IdeateUser? = nil
     let context = persistentContainer.viewContext
+    var user: IdeateUser? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addItemDidAdd(name: "testing")
-        addItemDidAdd(name: "testing 2")
-        print("TEST: user is nil? \(user == nil)")
+        user = SessionUser.shared.currentUser
         navigationItem.leftBarButtonItem = editButtonItem
     }
     
@@ -119,19 +117,22 @@ class ProjectsHomeTableViewController: UITableViewController {
     // MARK: Presenting individual projects
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "toProjectSegue", sender: self)
+        performSegue(withIdentifier: "toProjectSegue", sender: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toProjectSegue" {
-            let targetVC = segue.destination as! ProjectViewController
-            if let user = user, let projectlist = user.projectlist, let project = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: project){
-                let projectsArray = returnSortedArray(list: projectlist)
-                let projectSelected = projectsArray[indexPath.row]
-                targetVC.project = projectSelected
-            }
+            guard
+                let targetVC = segue.destination as? ProjectViewController,
+                let indexPath = sender as? IndexPath,
+                let user = user,
+                let projectlist = user.projectlist
+            else { return }
+            let projectsArray = returnSortedArray(list: projectlist)
+            let projectSelected = projectsArray[indexPath.row]
+            targetVC.project = projectSelected
+            print("project selected: \(projectSelected.name ?? "no project")")
         }
     }
 }

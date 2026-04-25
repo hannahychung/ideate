@@ -71,6 +71,7 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        user = SessionUser.shared.currentUser
         collectionView.delegate = self
         collectionView.dataSource = self
         if let project = project {
