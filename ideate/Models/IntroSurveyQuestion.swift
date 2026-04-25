@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SurveyQuestion {
+class IntroSurveyQuestion {
     final var questionText: String
     var answers: [(String, [Trait])]
     init(text: String, answers: [(String, [Trait])]) {

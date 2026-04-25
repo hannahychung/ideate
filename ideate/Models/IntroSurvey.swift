@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Survey {
-    var questions: [SurveyQuestion] = []
+struct IntroSurvey {
+    var questions: [IntroSurveyQuestion] = []
     var userAnswers: [(String, [Trait])] = []
     
     init() {
@@ -67,7 +67,7 @@ struct Survey {
     }
     
     mutating func addQuestion(questionText: String, answers: [(String, [Trait])]) {
-        questions.append(SurveyQuestion(text: questionText, answers: answers))
+        questions.append(IntroSurveyQuestion(text: questionText, answers: answers))
     }
     
     func getAnswers(i: Int) -> [(String, [Trait])] {
@@ -90,7 +90,7 @@ struct Survey {
         return temp
     }
     
-    func getQuestion(i: Int) -> SurveyQuestion{
+    func getQuestion(i: Int) -> IntroSurveyQuestion{
         return questions[i]
     }
     

@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class SurveyViewController: UIViewController {
+class IntroSurveyViewController: UIViewController {
     
     @IBOutlet weak var progressBar: UIProgressView!
     
@@ -40,7 +40,7 @@ class SurveyViewController: UIViewController {
         
     var currentAnswers: [(String, [Trait])] = []
     
-    var survey = Survey.init()
+    var survey = IntroSurvey.init()
     
     override func viewDidLoad() {
         super.viewDidLoad()

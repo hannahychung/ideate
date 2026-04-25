@@ -5,12 +5,16 @@
         <attribute name="profile" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <relationship name="projectlist" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ProjectList" inverseName="user" inverseEntity="ProjectList"/>
+        <relationship name="surveys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Survey" inverseName="user" inverseEntity="Survey"/>
         <relationship name="traits" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TraitEntity" inverseName="user" inverseEntity="TraitEntity"/>
     </entity>
     <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="cells" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ProjectCell" inverseName="project" inverseEntity="ProjectCell"/>
         <relationship name="projectlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProjectList" inverseName="projects" inverseEntity="ProjectList"/>
+        <fetchedProperty name="fetchedProperty" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Project"/>
+        </fetchedProperty>
     </entity>
     <entity name="ProjectCell" representedClassName=".ProjectCell" syncable="YES" codeGenerationType="class">
         <attribute name="colorValue" optional="YES" attributeType="String"/>
@@ -23,6 +27,27 @@
     <entity name="ProjectList" representedClassName="ProjectList" syncable="YES" codeGenerationType="class">
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Project" inverseName="projectlist" inverseEntity="Project"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IdeateUser" inverseName="projectlist" inverseEntity="IdeateUser"/>
+    </entity>
+    <entity name="Survey" representedClassName="Survey" syncable="YES" codeGenerationType="class">
+        <attribute name="finished" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="questions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyQuestion" inverseName="survey" inverseEntity="SurveyQuestion"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="IdeateUser" inverseName="surveys" inverseEntity="IdeateUser"/>
+    </entity>
+    <entity name="SurveyAnswer" representedClassName=".SurveyAnswer" syncable="YES" codeGenerationType="class">
+        <attribute name="answer" optional="YES" attributeType="String"/>
+        <relationship name="question" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyQuestion" inverseName="answers" inverseEntity="SurveyQuestion"/>
+        <relationship name="traits" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyTrait" inverseName="answer" inverseEntity="SurveyTrait"/>
+    </entity>
+    <entity name="SurveyQuestion" representedClassName="SurveyQuestion" syncable="YES" codeGenerationType="class">
+        <attribute name="question" optional="YES" attributeType="String"/>
+        <relationship name="answers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyAnswer" inverseName="question" inverseEntity="SurveyAnswer"/>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="questions" inverseEntity="Survey"/>
+    </entity>
+    <entity name="SurveyTrait" representedClassName="SurveyTrait" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="answer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyAnswer" inverseName="traits" inverseEntity="SurveyAnswer"/>
     </entity>
     <entity name="TraitEntity" representedClassName=".TraitEntity" syncable="YES" codeGenerationType="class">
         <attribute name="strength" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>

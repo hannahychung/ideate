@@ -81,7 +81,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toSurveySegue" {
-            let destinationVC = segue.destination as! SurveyViewController
+            let destinationVC = segue.destination as! IntroSurveyViewController
             destinationVC.user = self.currentUser
             destinationVC.modalPresentationStyle = .fullScreen
         }
