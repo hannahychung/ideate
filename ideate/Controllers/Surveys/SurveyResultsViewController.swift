@@ -16,7 +16,7 @@ class SurveyResultsViewController: UIViewController {
     var result: String = ""
     var survey: Survey? = nil
     
-    var tips: [String] = []
+    var tips: [String] = ["", "", ""]
     
     @IBOutlet weak var resultLabel: UILabel!
     
@@ -31,9 +31,44 @@ class SurveyResultsViewController: UIViewController {
         user = SessionUser.shared.currentUser
         if let answers = answers {
             result = compileTraits(answers: answers)
-            resultLabel.text = result
+            presentResults(result)
         }
 
+    }
+    
+    func presentResults(_ result: String) {
+        var resultText = ""
+        
+        if survey?.title == "Making a New Project" {
+            switch result {
+            case "modern_clean":
+                resultText = "Your project leans towards a more modern, clean, and timeless look that appeals to professionals and establishes credibility."
+                tips[0] = "Key words: professional, intuitive, confident"
+                tips[1] = "Use clean layouts and avoid clutter."
+                tips[2] = "Stick to a simple color palette."
+            case "minimalist":
+                resultText = "Your project may benefit from being more minimalist rather than flashy or expressive, focusing on subtle details to tell a message."
+                tips[0] = "Key words: minimal, calm, refined"
+                tips[1] = "Limit elements and avoid wordiness."
+                tips[2] = "Use whitespace and text more than visuals."
+            case "young_trendy":
+                resultText = "Your project is geared towards being more youthful and fresh, with a style that is exciting and fun."
+                tips[0] = "Key words: playful, energetic, trendy"
+                tips[1] = "Take a look at what designs are popular right now."
+                tips[2] = "Try adding interesting animations and elements."
+            case "bold_expressive":
+                resultText = "Your project should be expressive and bold, with a unique design style that speaks on its own."
+                tips[0] = "Key words: bold, creative, unique"
+                tips[1] = "Use strong contrast, large text, and standout visuals"
+                tips[2] = "Don’t be afraid to break traditional layout rules."
+            default:
+                resultText = "[no result]"
+            }
+        }
+        resultLabel.text = resultText
+        firstRec.setTitle(tips[0], for: .normal)
+        secondRec.setTitle(tips[1], for: .normal)
+        thirdRec.setTitle(tips[2], for: .normal)
     }
     
     func compileTraits(answers: NSSet) -> String {

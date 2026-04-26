@@ -69,6 +69,7 @@ class ProjectViewController: UIViewController, UITextFieldDelegate, UnsplashPhot
         user = SessionUser.shared.currentUser
         collectionView.delegate = self
         collectionView.dataSource = self
+        projectName.adjustsFontSizeToFitWidth = true
         
         if let project = project {
             projectName.text = project.name

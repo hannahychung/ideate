@@ -122,7 +122,8 @@ class SurveyViewController: UIViewController {
                     }
                 }
             }
-
+        
+        //adding answer's traits to the user
             if let traits = selected.traits {
                 for t in traits {
                     let t = t as! SurveyTrait
